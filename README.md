@@ -61,4 +61,4 @@ Use the *X* *Y* *A* *B* button to control rotations
 
 
 
-**Notice, if the mount node didn't launch sucessfully, maybe it was caused by the usb port number in src/pan_tilt_ros/pan_tilt_driver/src/PanTiltDriverNode.cpp file line 88. Double check the port number usage and modify it accordingly **
+**Notice, if the mount node didn't launch sucessfully, maybe it was caused by the usb port number in src/pan_tilt_ros/pan_tilt_driver/src/PanTiltDriverNode.cpp file line 88. Double check the port number usage and modify it accordingly**
