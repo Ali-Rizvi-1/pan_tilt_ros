@@ -21,7 +21,7 @@ cd ~/ros_ws/src
 ```
 Clone
 ```shell
-git clone https://github.com/I-Quotient-Robotics/pan_tilt_ros.git
+git clone https://github.com/cviss-lab/pan_tilt_ros.git
 cd ..
 catkin_make
 ```
@@ -37,7 +37,7 @@ sudo cp ./56-pan-tilt.rules /etc/udev/rules.d/
 ```
 **Notice, remember to replug the usb after adding rule**
 
-## Suage
+## Usage
 First, connect the power charge and usb of the mount
 ### 1.Normal Mode
 Launch the node
