@@ -15,25 +15,32 @@ def joy_callback(data):
   global publisher
   global pan_tilt_yaw, pan_tilt_pitch
 
-  # button Y
-  if data.buttons[0]==1:
-    pan_tilt_pitch -= delta_value
-    # rospy.loginfo("up")
+  # # button Y
+  # if data.buttons[0]==1:
+  #   pan_tilt_pitch -= delta_value
+  #   # rospy.loginfo("up")
 
-  # button B
-  if data.buttons[1]==1:
-    pan_tilt_yaw -= delta_value
-    # rospy.loginfo("right")
+  # # button B
+  # if data.buttons[1]==1:
+  #   pan_tilt_yaw -= delta_value
+  #   # rospy.loginfo("right")
 
-  # button A
-  if data.buttons[2]==1:
-    pan_tilt_pitch += delta_value
-    # rospy.loginfo("down")
+  # # button A
+  # if data.buttons[2]==1:
+  #   pan_tilt_pitch += delta_value
+  #   # rospy.loginfo("down")
 
-  # button X
-  if data.buttons[3]==1:
-    pan_tilt_yaw += delta_value
-    # rospy.loginfo("left")
+  # # button X
+  # if data.buttons[3]==1:
+  #   pan_tilt_yaw += delta_value
+  #   # rospy.loginfo("left")
+
+  horz_axis = data.axes[2]
+  vert_axis = data.axes[5]
+
+  if horz_axis != 0 and vert_axis != 0:
+    pan_tilt_pitch = -vert_axis*60
+    pan_tilt_yaw   =  horz_axis*60
 
   # button RB
   if data.buttons[5]==1:
