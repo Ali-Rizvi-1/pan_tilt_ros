@@ -46,3 +46,10 @@ add_dependencies(PanTiltDriverNode pan_tilt_msgs_generate_messages_cpp)
 # target_link_libraries(test2
 #   ${catkin_LIBRARIES}
 # )
+
+catkin_install_python(PROGRAMS
+  nodes/pan_tilt_control.py
+  nodes/robot_dog_control.py
+  nodes/pan_tilt_zoom_control.py
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)

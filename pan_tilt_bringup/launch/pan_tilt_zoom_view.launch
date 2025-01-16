@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+    <!-- Include the base pan tilt launch file -->
+    <include file="$(find pan_tilt_bringup)/launch/panTilt_bringup.launch">
+        <arg name="pub_urdf" value="true"/>
+    </include>
+
+    <!-- Launch our pan tilt controller -->
+    <node name="pan_tilt_controller" 
+          pkg="pan_tilt_driver" 
+          type="pan_tilt_zoom_control.py" 
+          output="screen">
+        <param name="default_speed" value="15"/>
+    </node>
+
+    <!-- Launch RViz -->
+    <arg name="rvizconfig" default="$(find pan_tilt_description)/rviz/view_model.rviz"/>
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true"/>
+</launch>

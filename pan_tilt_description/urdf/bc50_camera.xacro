@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="bc50_camera">
+    <xacro:arg name="camera_tf_prefix" default=""/>
+    
+    <!-- Include Gazebo camera plugin configurations -->
+    <xacro:property name="M_PI" value="3.1415926535897931" />
+    
+    <!-- Camera Properties -->
+    <xacro:property name="min_focal_length" value="4.3"/>
+    <xacro:property name="max_focal_length" value="88.5"/>
+    <xacro:property name="min_fov" value="0.040142"/>  <!-- 2.3 degrees -->
+    <xacro:property name="max_fov" value="1.111701"/>  <!-- 63.7 degrees -->
+    
+    <xacro:macro name="bc50_camera" params="parent *origin">
+        <!-- Camera mount point -->
+        <link name="$(arg camera_tf_prefix)camera_mount"/>
+        <joint name="$(arg camera_tf_prefix)camera_mount_joint" type="fixed">
+            <parent link="${parent}"/>
+            <child link="$(arg camera_tf_prefix)camera_mount"/>
+            <xacro:insert_block name="origin"/>
+        </joint>
+
+        <!-- Camera body -->
+        <link name="$(arg camera_tf_prefix)camera_body">
+            <visual>
+                <origin xyz="0 0 0"/>
+                <geometry>
+                    <box size="0.1422 0.071 0.0827"/>
+                </geometry>
+                <material name="dark_blue">
+                    <color rgba="0.1 0.1 0.1 1.0"/>
+                </material>
+            </visual>
+            <collision>
+                <origin xyz="0 0 0"/>
+                <geometry>
+                    <box size="0.1422 0.071 0.0827"/>
+                </geometry>
+            </collision>
+            <inertial>
+                <mass value="0.7"/>
+                <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/>
+            </inertial>
+        </link>
+
+        <!-- Mount to body connection -->
+        <joint name="$(arg camera_tf_prefix)mount_to_camera_body" type="fixed">
+            <parent link="$(arg camera_tf_prefix)camera_mount"/>
+            <child link="$(arg camera_tf_prefix)camera_body"/>
+            <origin xyz="-0.0199 0.0 0.04585" rpy="0.0 0.0 0.0"/>
+        </joint>
+
+        <!-- Optical frame -->
+        <link name="$(arg camera_tf_prefix)camera_optical_frame"/>
+        <joint name="$(arg camera_tf_prefix)body_to_optical" type="fixed">
+            <parent link="$(arg camera_tf_prefix)camera_body"/>
+            <child link="$(arg camera_tf_prefix)camera_optical_frame"/>
+            <origin xyz="0.0726 0.0 0.0" rpy="${-M_PI/2} 0.0 ${-M_PI/2}"/>
+        </joint>
+
+        <!-- Gazebo plugin configuration -->
+        <gazebo reference="$(arg camera_tf_prefix)camera_body">
+            
+            <!-- Default camera sensor -->
+            <sensor type="camera" name="bc50_default">
+                <update_rate>30.0</update_rate>
+                <camera>
+                    <horizontal_fov>${max_fov}</horizontal_fov>
+                    <image>
+                        <width>1920</width>
+                        <height>1080</height>
+                        <format>R8G8B8</format>
+                    </image>
+                    <clip>
+                        <near>0.1</near>
+                        <far>100</far>
+                    </clip>
+                    <noise>
+                        <type>gaussian</type>
+                        <mean>0.0</mean>
+                        <stddev>0.001</stddev>
+                    </noise>
+                </camera>
+                
+                <!-- Default ROS camera plugin -->
+                <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
+                    <alwaysOn>true</alwaysOn>
+                    <updateRate>30.0</updateRate>
+                    <cameraName>bc50_default</cameraName>
+                    <imageTopicName>image_raw</imageTopicName>
+                    <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+                    <frameName>$(arg camera_tf_prefix)camera_optical_frame</frameName>
+                    <hackBaseline>0.0</hackBaseline>
+                    <distortionK1>-0.21131</distortionK1>
+                    <distortionK2>0.156267</distortionK2>
+                    <distortionK3>0.0</distortionK3>
+                    <distortionT1>-0.000928</distortionT1>
+                    <distortionT2>0.000826</distortionT2>
+                </plugin>
+            </sensor>
+        </gazebo>
+    </xacro:macro>
+</robot>
